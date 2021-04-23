@@ -9,35 +9,62 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
         mySprite.vy = -200
     }
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.finish, function (sprite, flag) {
-	
-})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (powerup == 1) {
-        projectile = sprites.createProjectileFromSprite(img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . a a a a . . . . . . 
-            . . . . a a a a a a a . . . . . 
-            . . . . . a a a a a a . . . . . 
-            . . . . . a a a a a a . . . . . 
-            . . . . . . . a a a . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `, mySprite, 70, 0)
+        if (controller.right.isPressed() || count1 == 1) {
+            projectile = sprites.createProjectileFromSprite(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . a a a a . . . . . . 
+                . . . . a a a a a a a . . . . . 
+                . . . . . a a a a a a . . . . . 
+                . . . . . a a a a a a . . . . . 
+                . . . . . . . a a a . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `, mySprite, 70, 0)
+        }
+        if (controller.left.isPressed() || count == 1) {
+            projectile = sprites.createProjectileFromSprite(img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . a a a a . . . . . . 
+                . . . . . a a a a a a a . . . . 
+                . . . . . a a a a a a a a . . . 
+                . . . . . a a a a a a . . . . . 
+                . . . . . . . a a a . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `, mySprite, -70, 0)
+        }
     }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -200
     }
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    count = 1
+    count1 = 0
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    count = 0
+    count1 = 1
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.flower, function (sprite, otherSprite) {
     tulip.destroy()
@@ -70,9 +97,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.flower, function (sprite, otherS
     ooga.follow(mySprite, 50)
     tiles.placeOnRandomTile(ooga, assets.tile`transparency16`)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.finish, function (sprite, flag) {
+	
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.blocks, function (sprite, otherSprite) {
     mySprite.startEffect(effects.starField)
-    block.destroy()
+    block2.destroy()
     game.splash("Power Up!")
     powerup = 1
 })
@@ -83,9 +113,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     info.changeLifeBy(-1)
 })
 let ooga: Sprite = null
+let count = 0
 let projectile: Sprite = null
+let count1 = 0
 let powerup = 0
-let block: Sprite = null
+let block2: Sprite = null
 let tulip: Sprite = null
 let mySprite: Sprite = null
 mySprite = sprites.create(img`
@@ -136,7 +168,7 @@ tulip = sprites.create(img`
     ...........777..........
     `, SpriteKind.flower)
 tiles.placeOnTile(tulip, tiles.getTileLocation(randint(4, 10), 6))
-block = sprites.create(img`
+block2 = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . 6 6 6 6 . . . . . . 
     . . . . 6 6 6 5 5 6 6 6 . . . . 
@@ -154,7 +186,7 @@ block = sprites.create(img`
     . . . . . . 6 6 6 6 . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.blocks)
-tiles.placeOnRandomTile(block, assets.tile`transparency16`)
+tiles.placeOnRandomTile(block2, assets.tile`transparency16`)
 info.setLife(3)
 powerup = 0
 game.onUpdate(function () {
